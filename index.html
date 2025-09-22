@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Project 1 - Data Collection</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+  <h2>Data Collection Form</h2>
+  <form id="leadForm">
+    <input type="text" id="name" placeholder="Enter Name" required><br><br>
+    <input type="email" id="email" placeholder="Enter Email" required><br><br>
+    <textarea id="subject" placeholder="Enter Subject"></textarea><br><br>
+    <button type="submit">Submit</button>
+  </form>
+
+  <p id="status"></p>
+
+  <script type="module">
+    // 🔑 Replace with your Supabase Project URL & Public Anon Key
+    const SUPABASE_URL = "https://uixkuiofypivrsghkehn.supabase.co";
+    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVpeGt1aW9meXBpdnJzZ2hrZWhuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg0NjQzODMsImV4cCI6MjA3NDA0MDM4M30.2Ircydm6-V11Qmv8FthJNpleu23HxLUteqZzH1YJZlE";
+
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    document.getElementById("leadForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      let name = document.getElementById("name").value;
+      let email = document.getElementById("email").value;
+      let subject = document.getElementById("subject").value;
+
+      const { data, error } = await supabase
+        .from("leads")
+        .insert([{ name, email, subject }]);
+
+      if (error) {
+        document.getElementById("status").innerText = "❌ Error: " + error.message;
+      } else {
+        document.getElementById("status").innerText = "✅ Data stored successfully!";
+        document.getElementById("leadForm").reset();
+      }
+    });
+  </script>
+</body>
+</html>
